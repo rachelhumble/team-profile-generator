@@ -62,7 +62,7 @@ function questions(answers) {
                 answers.id = id + 1;
                 id = answers.id;
                 delete answers.confirm;
-                //create object based on unique classes
+
                 if(answers.role === "Manager") {
                     let employee = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
                     employees.push(employee);
@@ -77,6 +77,7 @@ function questions(answers) {
             } else {
                 answers.id = id + 1;
                 delete answers.confirm;
+
                 if(answers.role === "Manager") {
                     let employee = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
                     employees.push(employee);
@@ -87,9 +88,16 @@ function questions(answers) {
                     let employee = new Intern(answers.name, answers.id, answers.email, answers.school);
                     employees.push(employee);
                 }
-                // const employees = JSON.stringify(employees, null, '  ' );
-                console.log(employees);
+
                 render(employees);
+
+                fs.mkdir('./output', { recursive: true }, (err) => {
+                    if (err) throw err;
+                });
+                fs.writeFile(outputPath, render(employees), function (err) {
+                    if (err) throw err;
+                });
+
                 console.log("Team Overview created successfully!");
             }
         });
@@ -105,14 +113,4 @@ async function init() {
 }
 
 init();
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-
-
-
 
