@@ -10,8 +10,15 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+
+const managers = [];
+const engineers = [];
+const interns = [];
+let employeeId = 0;
+const employees = { managers, engineers, interns };
 
 function questions(answers) {
     inquirer
@@ -31,7 +38,6 @@ function questions(answers) {
                   name: "email"
               },
               {
-                  type: "number",
                   message: "Enter manager's office number:",
                   name: "officeNumber",
                   when: function(answers) {
@@ -60,32 +66,52 @@ function questions(answers) {
         ])
         .then((answers) => {
             if(answers.confirm) {
-                console.log(JSON.stringify(answers, null, '  '));
-                // need to add ID variable
-                // need to push employee to object based on role
+                answers.id = employeeId + 1;
+                employeeId = answers.id;
+                delete answers.confirm;
+                if(answers.role === "Manager") {
+                    managers.push(answers);
+                } else if(answers.role === "Engineer") {
+                    engineers.push(answers);
+                } else {
+                    interns.push(answers);
+                }
                 questions();
             } else {
-                // need to add ID variable
-                // need to push employee to object based on role
-                console.log(JSON.stringify(answers, null, '  '));
-            }
+                answers.id = employeeId + 1;
+                delete answers.confirm;
+                if(answers.role === "Manager") {
+                    managers.push(answers);
+                } else if(answers.role === "Engineer") {
+                    engineers.push(answers);
+                } else {
+                    interns.push(answers);
+                };
+                // console.log(JSON.stringify(managers, null, '  ' ));
+                // console.log(JSON.stringify(engineers, null, '  ' ));
+                // console.log(JSON.stringify(interns, null, '  ' ));
+                console.log(JSON.stringify(employees, null, '  ' ));
+            };
         });
-};
+}
 
 async function init() {
     try {
-      const answers = await questions();
-    
+      await questions();
+    //   await render(employees);
+
     } catch(err) {
       console.log(err);
     }
 }
-  
+
 init();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+
+
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
