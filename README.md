@@ -1,5 +1,5 @@
 # team-profile-generator
-Team Profile Generator app for hw assignment 10
+Team Profile Generator CLI app made with Node.js for hw 10
 
 <img src="assets/hw10.gif">
 
